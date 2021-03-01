@@ -1,3 +1,5 @@
+import React, {useState, useEffect} from 'react';
+import { Redirect, Switch, Route, BrowserRouter } from 'react-router-dom';
 import Header from './Header.js';
 import Main from './Main.js';
 import Footer from './Footer.js';
@@ -9,11 +11,12 @@ import ImagePopup from './ImagePopup.js';
 import api from '../utils/api.js';
 import { CurrentUserContext } from '../contexts/CurrentUserContext.js';
 import './App.css';
-import React, {useState, useEffect} from 'react';
 
 
 
 function App() {
+  const [loggedIn, setLoggenIn] = useState(false);
+
   //контекст пользователя
   const [currentUser, setCurrentUser] = useState({});
 
@@ -105,70 +108,83 @@ function App() {
   }
 
   return (
-  <CurrentUserContext.Provider value={currentUser}>
-      <div className="App">
-        <div className="page">
-          <div className="page_content">
+    <BrowserRouter>
+      <Switch>
+        <Route path="/sign-up">
 
-      <Header></Header>
-      
-      <Main 
-        onEditProfile={() => {
-          setIsEditProfileOpen(true);
-        }}
-        onAddPlace={() => {
-          setIsAddPlacePopupOpen(true);
-        }}
-        onEditAvatar={() => {
-          setIsEditAvatarPopupOpen(true);
-        }}
-        cards={cards}
-        onCardClick={handleCardClick}
-        onCardLike={handleCardLike}
-        onCardDelete={handleCardDelete}
-      />
+        </Route>
+        <Route path="sign-in">
 
-      <Footer></Footer>
+        </Route>
+        <Route path="/mesto">
+        <CurrentUserContext.Provider value={currentUser}>
+        <div className="App">
+          <div className="page">
+            <div className="page_content">
 
-      <EditProfilePopup
-        isOpen={isEditProfilePopupOpen}
-        onClose={closeAllPopups}
-        onUpdateUser={handleUpdateUser}>
-      </EditProfilePopup>
+        <Header></Header>
+        
+        <Main 
+          onEditProfile={() => {
+            setIsEditProfileOpen(true);
+          }}
+          onAddPlace={() => {
+            setIsAddPlacePopupOpen(true);
+          }}
+          onEditAvatar={() => {
+            setIsEditAvatarPopupOpen(true);
+          }}
+          cards={cards}
+          onCardClick={handleCardClick}
+          onCardLike={handleCardLike}
+          onCardDelete={handleCardDelete}
+        />
 
-      <EditAvatarPopup
-        isOpen={isEditAvatarPopupOpen}
-        onClose={closeAllPopups}
-        onUpdateAvatar={handleUpdateAvatar}>
-      </EditAvatarPopup>
+        <Footer></Footer>
 
-      <AddPlacePopup
-        isOpen={isAddPlacePopupOpen}
-        onClose={closeAllPopups}
-        onAddPlace={handleAddPlaceSubmit}>
-      </AddPlacePopup>
-      
+        <EditProfilePopup
+          isOpen={isEditProfilePopupOpen}
+          onClose={closeAllPopups}
+          onUpdateUser={handleUpdateUser}>
+        </EditProfilePopup>
 
-      <PopupWithForm 
-        name='submit'
-        title='Вы уверены?'
-        buttonName='submit-action'
-        buttonTitle='Да'
-        isOpen={isSubmitPopupOpen}
-        onClose={closeAllPopups}
-      />
+        <EditAvatarPopup
+          isOpen={isEditAvatarPopupOpen}
+          onClose={closeAllPopups}
+          onUpdateAvatar={handleUpdateAvatar}>
+        </EditAvatarPopup>
 
-      
+        <AddPlacePopup
+          isOpen={isAddPlacePopupOpen}
+          onClose={closeAllPopups}
+          onAddPlace={handleAddPlaceSubmit}>
+        </AddPlacePopup>
+        
 
-      <ImagePopup 
-        card={selectedCard}
-        isOpen={isImagePopupOpen}
-        onClose={closeAllPopups}
-      />
-      </div>
-      </div>
-      </div>
-  </CurrentUserContext.Provider>
+        <PopupWithForm 
+          name='submit'
+          title='Вы уверены?'
+          buttonName='submit-action'
+          buttonTitle='Да'
+          isOpen={isSubmitPopupOpen}
+          onClose={closeAllPopups}
+        />
+
+        <ImagePopup 
+          card={selectedCard}
+          isOpen={isImagePopupOpen}
+          onClose={closeAllPopups}
+        />
+        </div>
+        </div>
+        </div>
+        </CurrentUserContext.Provider> 
+        </Route>
+        <Route>
+          {!loggedIn ? <Redirect to="/sign-in" /> : <Redirect to="/mesto" />}
+        </Route>
+      </Switch>
+    </BrowserRouter>
   );
 }
 
