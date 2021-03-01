@@ -2,6 +2,8 @@
   position: relative;
   margin: 0 auto;
   background-color: #000;
+  min-height: 100vh;
+  box-sizing: border-box;
   padding: 45px calc((100% - 882px) / 2) 60px;
   font-family: "Inter", "Arial", sans-serif;
 }

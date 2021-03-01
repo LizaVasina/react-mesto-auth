@@ -8,6 +8,8 @@ import EditProfilePopup from './EditProfilePopup.js';
 import EditAvatarPopup from './EditAvatarPopup.js';
 import AddPlacePopup from './AddPlacePopup.js';
 import ImagePopup from './ImagePopup.js';
+import Register from './Register.js';
+import Login from './Login.js';
 import api from '../utils/api.js';
 import { CurrentUserContext } from '../contexts/CurrentUserContext.js';
 import './App.css';
@@ -108,21 +110,34 @@ function App() {
   }
 
   return (
+<div className="App">
+  <div className="page">
+    <div className="page_content">
+
     <BrowserRouter>
       <Switch>
         <Route path="/sign-up">
-
+          <Header>
+            <button type="button" className="header__button header__button_place_sign-up">Войти</button>
+          </Header>
+          <Register></Register>
         </Route>
-        <Route path="sign-in">
-
+        <Route path="/sign-in">
+          <Header>
+            <button type="button" className="header__button header__button_place_sign-up">Регистрация</button>
+          </Header>
+          <Login></Login>
         </Route>
-        <Route path="/mesto">
+        <Route path="/">
         <CurrentUserContext.Provider value={currentUser}>
-        <div className="App">
-          <div className="page">
-            <div className="page_content">
+        
 
-        <Header></Header>
+        <Header>
+          <div className="header__info">
+            <p className="header__email">xxx@gmail.com</p>
+            <button type="button" className="header__button header__button_place_main-page">Выход</button>
+          </div>
+        </Header>
         
         <Main 
           onEditProfile={() => {
@@ -175,17 +190,20 @@ function App() {
           isOpen={isImagePopupOpen}
           onClose={closeAllPopups}
         />
-        </div>
-        </div>
-        </div>
+        
         </CurrentUserContext.Provider> 
         </Route>
         <Route>
-          {!loggedIn ? <Redirect to="/sign-in" /> : <Redirect to="/mesto" />}
+          {!loggedIn ? <Redirect to="/sign-in" /> : <Redirect to="/" />}
         </Route>
       </Switch>
     </BrowserRouter>
+    </div>
+        </div>
+        </div>
   );
 }
 
 export default App;
+
+// защита информации: дома DES алгоритм
