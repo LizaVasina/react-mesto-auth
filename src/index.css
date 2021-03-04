@@ -21,6 +21,11 @@
 @import url(./blocks/pic-popup/__image/pic-popup__image.css);
 @import url(./blocks/pic-popup/__caption/pic-popup__caption.css);
 
+@import url(./blocks/infotooltip/infotooltip.css);
+@import url(./blocks/infotooltip/__container/infotooltip__container.css);
+@import url(./blocks/infotooltip/__picture/infotooltip__picture.css);
+@import url(./blocks/infotooltip/__title/infotooltip__title.css);
+
 /* Main page */
 @import url(./blocks/header/header.css);
 @import url(./blocks/header/__logo/header__logo.css);

@@ -10,6 +10,7 @@ import AddPlacePopup from './AddPlacePopup.js';
 import ImagePopup from './ImagePopup.js';
 import Register from './Register.js';
 import Login from './Login.js';
+import InfoTooltip from './InfoTooltip.js';
 import api from '../utils/api.js';
 import { CurrentUserContext } from '../contexts/CurrentUserContext.js';
 import './App.css';
@@ -127,6 +128,8 @@ function App() {
             <button type="button" className="header__button header__button_place_sign-up">Регистрация</button>
           </Header>
           <Login></Login>
+
+          <InfoTooltip></InfoTooltip>
         </Route>
         <Route path="/">
         <CurrentUserContext.Provider value={currentUser}>
