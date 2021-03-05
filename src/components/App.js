@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { Redirect, Switch, Route, BrowserRouter } from 'react-router-dom';
+import ProtectedRoute from './ProtectedRoute.js';
 import Header from './Header.js';
 import Main from './Main.js';
 import Footer from './Footer.js';
@@ -18,7 +19,7 @@ import './App.css';
 
 
 function App() {
-  const [loggedIn, setLoggenIn] = useState(false);
+  const [loggedIn, setLoggenIn] = useState(true);
 
   //контекст пользователя
   const [currentUser, setCurrentUser] = useState({});
@@ -110,6 +111,18 @@ function App() {
       .catch((err) => console.log(err));
   }
 
+  function handleEditProfilePopupOpen() {
+    setIsEditProfileOpen(true);
+  }
+
+  function handleAddPlacePopupOpen() {
+    setIsAddPlacePopupOpen(true);
+  }
+
+  function handleEditAvatarPopupOpen() {
+    setIsEditAvatarPopupOpen(true);
+  }
+
   return (
 <div className="App">
   <div className="page">
@@ -131,71 +144,34 @@ function App() {
 
           <InfoTooltip></InfoTooltip>
         </Route>
-        <Route path="/">
         <CurrentUserContext.Provider value={currentUser}>
+        <ProtectedRoute path="/"
+                component={Main}
+
+                onEditProfilePopup={handleEditProfilePopupOpen}
+                onAddPlacePopup={handleAddPlacePopupOpen}
+                onEditAvatarPopup={handleEditAvatarPopupOpen}
+                cards={cards}
+                selectedCard={selectedCard}
+                onCardClick={handleCardClick}
+                onCardLike={handleCardLike}
+                onCardDelete={handleCardDelete}
+
+                isEditProfilePopupOpen={isEditProfilePopupOpen}
+                isEditAvatarPopupOpen={isEditAvatarPopupOpen}
+                isAddPlacePopupOpen={isAddPlacePopupOpen}
+                isSubmitPopupOpen={isSubmitPopupOpen}
+                isImagePopupOpen={isImagePopupOpen}
+
+                onClose={closeAllPopups}
+                onUpdateUser={handleUpdateUser}
+                onUpdateAvatar={handleUpdateAvatar}
+                onAddPlace={handleAddPlaceSubmit}
+                >
         
-
-        <Header>
-          <div className="header__info">
-            <p className="header__email">xxx@gmail.com</p>
-            <button type="button" className="header__button header__button_place_main-page">Выход</button>
-          </div>
-        </Header>
-        
-        <Main 
-          onEditProfile={() => {
-            setIsEditProfileOpen(true);
-          }}
-          onAddPlace={() => {
-            setIsAddPlacePopupOpen(true);
-          }}
-          onEditAvatar={() => {
-            setIsEditAvatarPopupOpen(true);
-          }}
-          cards={cards}
-          onCardClick={handleCardClick}
-          onCardLike={handleCardLike}
-          onCardDelete={handleCardDelete}
-        />
-
-        <Footer></Footer>
-
-        <EditProfilePopup
-          isOpen={isEditProfilePopupOpen}
-          onClose={closeAllPopups}
-          onUpdateUser={handleUpdateUser}>
-        </EditProfilePopup>
-
-        <EditAvatarPopup
-          isOpen={isEditAvatarPopupOpen}
-          onClose={closeAllPopups}
-          onUpdateAvatar={handleUpdateAvatar}>
-        </EditAvatarPopup>
-
-        <AddPlacePopup
-          isOpen={isAddPlacePopupOpen}
-          onClose={closeAllPopups}
-          onAddPlace={handleAddPlaceSubmit}>
-        </AddPlacePopup>
-        
-
-        <PopupWithForm 
-          name='submit'
-          title='Вы уверены?'
-          buttonName='submit-action'
-          buttonTitle='Да'
-          isOpen={isSubmitPopupOpen}
-          onClose={closeAllPopups}
-        />
-
-        <ImagePopup 
-          card={selectedCard}
-          isOpen={isImagePopupOpen}
-          onClose={closeAllPopups}
-        />
-        
+        </ProtectedRoute>
         </CurrentUserContext.Provider> 
-        </Route>
+        
         <Route>
           {!loggedIn ? <Redirect to="/sign-in" /> : <Redirect to="/" />}
         </Route>
