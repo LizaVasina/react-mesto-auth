@@ -3,12 +3,6 @@ import { Redirect, Switch, Route, BrowserRouter } from 'react-router-dom';
 import ProtectedRoute from './ProtectedRoute.js';
 import Header from './Header.js';
 import Main from './Main.js';
-import Footer from './Footer.js';
-import PopupWithForm from './PopupWithForm.js';
-import EditProfilePopup from './EditProfilePopup.js';
-import EditAvatarPopup from './EditAvatarPopup.js';
-import AddPlacePopup from './AddPlacePopup.js';
-import ImagePopup from './ImagePopup.js';
 import Register from './Register.js';
 import Login from './Login.js';
 import InfoTooltip from './InfoTooltip.js';
@@ -19,7 +13,7 @@ import './App.css';
 
 
 function App() {
-  const [loggedIn, setLoggenIn] = useState(true);
+  const [loggedIn, setLoggenIn] = useState(false);
 
   //контекст пользователя
   const [currentUser, setCurrentUser] = useState({});
@@ -147,6 +141,7 @@ function App() {
         <CurrentUserContext.Provider value={currentUser}>
         <ProtectedRoute path="/"
                 component={Main}
+                loggedIn={loggedIn}
 
                 onEditProfilePopup={handleEditProfilePopupOpen}
                 onAddPlacePopup={handleAddPlacePopupOpen}
