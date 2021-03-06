@@ -1,6 +1,5 @@
 import { CurrentUserContext } from '../contexts/CurrentUserContext.js';
 import React from 'react';
-import PopupWithForm from './PopupWithForm.js';
 
 function Card(props) {
     const currentUser = React.useContext(CurrentUserContext);

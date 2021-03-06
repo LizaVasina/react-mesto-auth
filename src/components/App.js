@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from 'react';
-import { Redirect, Switch, Route, BrowserRouter } from 'react-router-dom';
+import React, {useState, useEffect } from 'react';
+import { Redirect, Switch, Route, Link, useHistory } from 'react-router-dom';
 import ProtectedRoute from './ProtectedRoute.js';
 import Header from './Header.js';
 import Main from './Main.js';
@@ -7,6 +7,7 @@ import Register from './Register.js';
 import Login from './Login.js';
 import InfoTooltip from './InfoTooltip.js';
 import api from '../utils/api.js';
+import * as auth from './Auth.js';
 import { CurrentUserContext } from '../contexts/CurrentUserContext.js';
 import './App.css';
 
@@ -14,6 +15,12 @@ import './App.css';
 
 function App() {
   const [loggedIn, setLoggenIn] = useState(false);
+  const history = useHistory();
+  const initialData = {
+    email: '',
+    password: ''
+  }
+  const [data, setData] = React.useState(initialData);
 
   //контекст пользователя
   const [currentUser, setCurrentUser] = useState({});
@@ -117,24 +124,74 @@ function App() {
     setIsEditAvatarPopupOpen(true);
   }
 
+  useEffect(() => {
+    const jwt = localStorage.getItem('jwt');
+    if (jwt) {
+      auth.getContent(jwt)
+        .then(res => {
+          setLoggenIn(true);
+          setData({
+            email: res.data.email,
+            password: res.data.password
+          })
+          history.push('/');
+        })
+        .catch(() => history.push('/sign-in'));
+    }
+  }, [history]);
+
+  function handleLogin (data) {
+    auth.login(data)
+      .then(res => {
+        localStorage.setItem('jwt', res.token);
+        setData({
+          email: data.email,
+          password: data.password
+        });
+        setLoggenIn(true);
+        setTimeout(() => {
+          history.push('/');
+        }, 100);
+      })
+      .catch(err => console.log(err));
+  }
+
+  function handleRegister (data) {
+    auth.register(data)
+      .then(() => {
+        history.push('/sign-in');
+      })
+      .catch(err => console.log(err));
+  }
+
+  const handleSignOut = () => {
+    localStorage.removeItem('jwt');
+    setLoggenIn(false);
+    history.push('/sing-in');
+  }
+
   return (
 <div className="App">
   <div className="page">
     <div className="page_content">
 
-    <BrowserRouter>
+    
       <Switch>
         <Route path="/sign-up">
           <Header>
-            <button type="button" className="header__button header__button_place_sign-up">Войти</button>
+            <Link to="/sign-in" className="header__button header__button_place_sign-up">Войти</Link>
           </Header>
-          <Register></Register>
+          <Register
+            onRegister={handleRegister}
+          ></Register>
         </Route>
         <Route path="/sign-in">
           <Header>
-            <button type="button" className="header__button header__button_place_sign-up">Регистрация</button>
+            <Link to="/sign-up" className="header__button header__button_place_sign-up">Регистрация</Link>
           </Header>
-          <Login></Login>
+          <Login
+            onLogin={handleLogin}
+          ></Login>
 
           <InfoTooltip></InfoTooltip>
         </Route>
@@ -142,6 +199,7 @@ function App() {
         <ProtectedRoute path="/"
                 component={Main}
                 loggedIn={loggedIn}
+                userData={data}
 
                 onEditProfilePopup={handleEditProfilePopupOpen}
                 onAddPlacePopup={handleAddPlacePopupOpen}
@@ -162,6 +220,7 @@ function App() {
                 onUpdateUser={handleUpdateUser}
                 onUpdateAvatar={handleUpdateAvatar}
                 onAddPlace={handleAddPlaceSubmit}
+                onSignOut={handleSignOut}
                 >
         
         </ProtectedRoute>
@@ -171,7 +230,7 @@ function App() {
           {!loggedIn ? <Redirect to="/sign-in" /> : <Redirect to="/" />}
         </Route>
       </Switch>
-    </BrowserRouter>
+    
     </div>
         </div>
         </div>
@@ -180,4 +239,3 @@ function App() {
 
 export default App;
 
-// защита информации: дома DES алгоритм

@@ -1,4 +1,3 @@
-import api from '../utils/api.js';
 import Card from './Card.js';
 import Header from './Header.js';
 import Footer from './Footer.js';
@@ -7,9 +6,8 @@ import EditAvatarPopup from './EditAvatarPopup.js';
 import AddPlacePopup from './AddPlacePopup.js';
 import PopupWithForm from './PopupWithForm.js';
 import ImagePopup from './ImagePopup.js';
-import App from './App.js';
 import { CurrentUserContext } from '../contexts/CurrentUserContext.js';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 function Main(props) {
     const currentUser = React.useContext(CurrentUserContext);
@@ -18,8 +16,8 @@ function Main(props) {
     <>
     <Header>
       <div className="header__info">
-        <p className="header__email">xxx@gmail.com</p>
-        <button type="button" className="header__button header__button_place_main-page">Выход</button>
+        <p className="header__email">{props.userData.email}</p>
+        <button type="button" onClick={props.onSignOut} className="header__button header__button_place_main-page">Выход</button>
       </div>
     </Header>
 
