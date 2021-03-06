@@ -30,6 +30,8 @@ function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [isSubmitPopupOpen, setIsSubmitPopupOpen] = useState(false);
   const [isImagePopupOpen, setIsImagePopupOpen] = useState(false);
+  const [isInfoToolTipPopupOpen, setIsInfoToolTipPopupOpen] = useState(false);
+  const [infoPopupStatus, setInfoPopupStatus] = useState(false);
   const [selectedCard, setSelectedCard] = useState(null);
 
   const [cards, setCards] = useState([]);
@@ -82,6 +84,7 @@ function App() {
     setIsEditAvatarPopupOpen(false);
     setIsSubmitPopupOpen(false);
     setIsImagePopupOpen(false);
+    setIsInfoToolTipPopupOpen(false);
     setSelectedCard(null);
   }
 
@@ -149,19 +152,35 @@ function App() {
           password: data.password
         });
         setLoggenIn(true);
+        setInfoPopupStatus(true);
+        setIsInfoToolTipPopupOpen(true);
         setTimeout(() => {
+          setIsInfoToolTipPopupOpen(false);
           history.push('/');
-        }, 100);
+        }, 2000);
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+        setIsInfoToolTipPopupOpen(true);
+        setInfoPopupStatus(false);
+        console.log(err)
+      });
   }
 
   function handleRegister (data) {
     auth.register(data)
       .then(() => {
-        history.push('/sign-in');
+        setIsInfoToolTipPopupOpen(true);
+        setInfoPopupStatus(true);
+        setTimeout(() => {
+          setIsInfoToolTipPopupOpen(false);
+          history.push('/sign-in');
+        }, 2000);
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+        console.log(err);
+        setIsInfoToolTipPopupOpen(true);
+        setInfoPopupStatus(false);
+      });
   }
 
   const handleSignOut = () => {
@@ -184,6 +203,12 @@ function App() {
           <Register
             onRegister={handleRegister}
           ></Register>
+          <InfoTooltip
+            isOpen={isInfoToolTipPopupOpen}
+            popupStatus={infoPopupStatus}
+            onClose={closeAllPopups}
+            action={"зарегистрировались"}
+            ></InfoTooltip>
         </Route>
         <Route path="/sign-in">
           <Header>
@@ -192,8 +217,12 @@ function App() {
           <Login
             onLogin={handleLogin}
           ></Login>
-
-          <InfoTooltip></InfoTooltip>
+          <InfoTooltip
+            isOpen={isInfoToolTipPopupOpen}
+            popupStatus={infoPopupStatus}
+            onClose={closeAllPopups}
+            action={"авторизировались"}
+            ></InfoTooltip>
         </Route>
         <CurrentUserContext.Provider value={currentUser}>
         <ProtectedRoute path="/"
