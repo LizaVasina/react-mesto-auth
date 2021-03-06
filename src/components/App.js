@@ -7,7 +7,7 @@ import Register from './Register.js';
 import Login from './Login.js';
 import InfoTooltip from './InfoTooltip.js';
 import api from '../utils/api.js';
-import * as auth from './Auth.js';
+import * as auth from '../utils/auth.js';
 import { CurrentUserContext } from '../contexts/CurrentUserContext.js';
 import './App.css';
 
